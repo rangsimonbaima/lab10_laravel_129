@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -56,16 +57,22 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $product)
     {
-        //
+        // // ตัวอย่างการใช้ Raw SQL Query ในการอัปเดตข้อมูล
+
+        DB::table('products')
+        ->where('id', $product)
+        ->update(['product_name' => $request->name, 'product_type' => $request->type, 'price' => $request->price,]);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($product)
     {
-        //
+        Product::find($product)->delete();
+        return response(["message" => "Deleted."], 204);
     }
 }
